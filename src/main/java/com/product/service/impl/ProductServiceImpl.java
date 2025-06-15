@@ -63,7 +63,6 @@ public class ProductServiceImpl implements ProductService {
             discountedPrice = product.getPrice().subtract(seasonalDiscount);
         }
 
-        // Map product to DTO manually or using builder (recommended for custom fields)
         ProductDto dto = modelMapper.map(product, ProductDto.class);
         dto.setOriginalPrice(product.getPrice());
         dto.setDiscountedPrice(discountedPrice);
