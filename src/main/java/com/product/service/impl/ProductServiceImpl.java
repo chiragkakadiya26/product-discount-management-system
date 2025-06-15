@@ -49,14 +49,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
 
-        boolean isInStock = false;
-        if(product.getQuantity() > 0){
-            isInStock = true;
-        }
         boolean seasonalDiscountAvailable = isSeasonalDiscountValid();
 
         BigDecimal discountedPrice = product.getPrice();
-        if (seasonalDiscountAvailable && isInStock) {
+        if (seasonalDiscountAvailable) {
             BigDecimal seasonalDiscount = product.getPrice()
                     .multiply(seasonalDiscountPercentage)
                     .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
@@ -66,7 +62,6 @@ public class ProductServiceImpl implements ProductService {
         ProductDto dto = modelMapper.map(product, ProductDto.class);
         dto.setOriginalPrice(product.getPrice());
         dto.setDiscountedPrice(discountedPrice);
-        dto.setInStock(isInStock);
         dto.setSeasonalDiscountAvailable(seasonalDiscountAvailable);
 
         return dto;
@@ -81,12 +76,12 @@ public class ProductServiceImpl implements ProductService {
             throw new InsufficientStockException("Only " + product.getQuantity() + " units in stock.");
         }
 
-        if (request.getQuantity() <= 0){
+        if (product.getQuantity() <= 0){
             throw new InsufficientStockException("The product is out of stock");
         }
 
-        if(!"flat".equalsIgnoreCase(request.getDiscountType().toLowerCase()
-                ) && !"percentage".equalsIgnoreCase(request.getDiscountType().toLowerCase())){
+        if(!"flat".equalsIgnoreCase(request.getDiscountType()
+                ) && !"percentage".equalsIgnoreCase(request.getDiscountType())){
             throw new InvalidDiscountException("Invalid discount type");
         }
 
@@ -103,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         } else if ("flat".equalsIgnoreCase(request.getDiscountType())) {
             discountAmount = request.getDiscountValue();
             if (discountAmount.compareTo(originalPrice) >= 0) {
-                throw new InvalidDiscountException("Flat discount amount cannot exceed product price");
+                throw new InvalidDiscountException("The discount exceeds the product price");
             }
 
         }

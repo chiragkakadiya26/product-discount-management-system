@@ -11,7 +11,6 @@ public class ProductDto {
     private BigDecimal originalPrice;
     private BigDecimal discountedPrice;
     private Integer quantity;
-    private Boolean inStock;
     private Boolean seasonalDiscountAvailable;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -20,14 +19,13 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(String productId, String name, String description, BigDecimal originalPrice, BigDecimal discountedPrice, Integer quantity, Boolean inStock, Boolean seasonalDiscountAvailable, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ProductDto(String productId, String name, String description, BigDecimal originalPrice, BigDecimal discountedPrice, Integer quantity, Boolean seasonalDiscountAvailable, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.originalPrice = originalPrice;
         this.discountedPrice = discountedPrice;
         this.quantity = quantity;
-        this.inStock = inStock;
         this.seasonalDiscountAvailable = seasonalDiscountAvailable;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -79,14 +77,6 @@ public class ProductDto {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Boolean getInStock() {
-        return inStock;
-    }
-
-    public void setInStock(Boolean inStock) {
-        this.inStock = inStock;
     }
 
     public Boolean getSeasonalDiscountAvailable() {
